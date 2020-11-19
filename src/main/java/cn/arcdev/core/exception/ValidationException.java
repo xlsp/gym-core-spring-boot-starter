@@ -8,7 +8,12 @@ import cn.arcdev.core.constant.ErrorCodes;
  * @author Kraken
  */
 public class ValidationException extends ApplicationException {
+    /**
+     * Validation exception constructor.
+     *
+     * @param parameterName name of the invalid parameter
+     */
     public ValidationException(String parameterName) {
-        super(ErrorCodes.INVALID_PARAMETER, String.format("\"s%\"参数格式错误", parameterName));
+        super(ErrorCodes.INVALID_PARAMETER, "\"" + parameterName + "\"参数格式错误");
     }
 }

@@ -10,5 +10,6 @@ public class ErrorCodes {
         throw new IllegalAccessException();
     }
 
+    public static final int DEFAULT_ERROR_CODE = 10000000;
     public static final int INVALID_PARAMETER = 10000001;
 }
