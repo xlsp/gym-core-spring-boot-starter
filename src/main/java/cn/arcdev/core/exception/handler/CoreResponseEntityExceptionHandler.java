@@ -4,12 +4,15 @@ import cn.arcdev.core.constant.ErrorCodes;
 import cn.arcdev.core.dto.Response;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -32,9 +35,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class CoreResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     protected Response<Object> buildResponseEntity(HttpStatus status) {
+        return buildResponseEntity(status, status.getReasonPhrase());
+
+    }
+
+    protected Response<Object> buildResponseEntity(HttpStatus status, String message) {
         Response<Object> response = new Response<>();
         response.setStatus(ErrorCodes.DEFAULT_ERROR_CODE + status.value());
-        response.setMessage(status.getReasonPhrase());
+        response.setMessage(message);
         return response;
     }
 
@@ -101,7 +109,25 @@ public class CoreResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(buildResponseEntity(status), HttpStatus.OK);
+        BindingResult bindingResult = ex.getBindingResult();
+        if (bindingResult.hasErrors()) {
+            StringBuilder builder = new StringBuilder();
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                Object[] arguments = error.getArguments();
+                if (arguments == null || arguments.length == 0) {
+                    continue;
+                }
+                for (Object argument : arguments) {
+                    if (argument instanceof DefaultMessageSourceResolvable) {
+                        builder.append(((DefaultMessageSourceResolvable) argument).getDefaultMessage()).append(",");
+                    }
+                }
+                builder.append(error.getDefaultMessage()).append(";");
+            }
+            return new ResponseEntity<>(buildResponseEntity(status, builder.toString()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(buildResponseEntity(status), HttpStatus.OK);
+        }
     }
 
     @Override

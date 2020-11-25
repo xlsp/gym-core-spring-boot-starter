@@ -1,11 +1,14 @@
 package cn.arcdev.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * System common response.
  *
  * @param <T> data type
  * @author Kraken
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response<T> {
     private int status;
     private String message;
