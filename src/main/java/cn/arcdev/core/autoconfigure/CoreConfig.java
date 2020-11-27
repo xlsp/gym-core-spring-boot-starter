@@ -3,6 +3,7 @@ package cn.arcdev.core.autoconfigure;
 import cn.arcdev.core.exception.handler.CoreGlobalExceptionHandler;
 import cn.arcdev.core.exception.handler.CoreResponseEntityExceptionHandler;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,13 +12,14 @@ import org.springframework.context.annotation.Configuration;
  * @author Kraken
  */
 @Configuration
+@ComponentScan("cn.arcdev.core.exception.handler")
 public class CoreConfig {
 
     /**
      * A customized {@link org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler},
      * replaces the default one in spring boot web.
      *
-     * @return A customized {@code CoreResponseEntityExceptionHandler} bean.
+     * @return A customized {@code CoreResponseEntityExceptionHandler} bean
      */
     @Bean
     public CoreResponseEntityExceptionHandler responseEntityExceptionHandlerBean() {
@@ -27,7 +29,7 @@ public class CoreConfig {
     /**
      * Global exception handler.
      *
-     * @return {@code CoreGlobalExceptionHandler} bean.
+     * @return {@code CoreGlobalExceptionHandler} bean
      */
     @Bean
     public CoreGlobalExceptionHandler coreGlobalExceptionHandlerBean() {

@@ -11,5 +11,6 @@ public class ErrorCodes {
     }
 
     public static final int DEFAULT_ERROR_CODE = 10000000;
+    public static final String DEFAULT_ERROR_MESSAGE = "Unknown error";
     public static final int INVALID_PARAMETER = 10000001;
 }
