@@ -3,6 +3,8 @@ package cn.arcdev.core.exception.handler;
 import cn.arcdev.core.constant.ErrorCodes;
 import cn.arcdev.core.dto.Response;
 import cn.arcdev.core.exception.ApplicationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -32,6 +34,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  */
 @RestControllerAdvice
 public class CoreGlobalExceptionHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoreGlobalExceptionHandler.class);
+
     /**
      * Handle all exceptions.
      *
@@ -40,6 +44,7 @@ public class CoreGlobalExceptionHandler {
      */
     @ExceptionHandler(Throwable.class)
     public Response<Object> handle(Throwable exception) {
+        LOGGER.debug("catch an exception", exception);
         if (exception instanceof ApplicationException) {
             return new Response<>().setStatus(((ApplicationException) exception).getStatus()).setMessage(exception.getMessage());
         } else if (exception instanceof HttpRequestMethodNotSupportedException) {

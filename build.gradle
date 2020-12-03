@@ -8,7 +8,7 @@ plugins {
 group 'cn.arcdev'
 
 sourceCompatibility = 1.8
-def nexusAddress = "http://192.168.127.170:8081"
+def nexusAddress = "http://172.18.100.94:8081"
 
 repositories {
     mavenLocal()
